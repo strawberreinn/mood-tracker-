@@ -367,7 +367,7 @@ def open_fourth_page():
     done_button.place(relx=0.98, rely=0.95, anchor="se")
     refresh_edit_entries()
 
-# ===== fifth page (view stats) =====
+# ===== fifth page (view stats table) =====
 view_stats_label = tk.Label(
     root,
     text="✿ VIEW STATS ✿",
@@ -381,11 +381,19 @@ stats_frame = tk.Frame(root, bg="#FFFDDD")
 def refresh_stats():
     for widget in stats_frame.winfo_children():
         widget.destroy()
+
     counts = {"HAPPY":0,"SAD":0,"ANGRY":0,"NEUTRAL":0,"STRESSED":0}
     for entry in mood_entries:
         counts[entry["emotion_name"]] += 1
-    for emo, count in counts.items():
-        tk.Label(stats_frame, text=f"{emo}: {count}", font=("Arial Rounded MT Bold", 20), bg="#FFFDDD", fg="hot pink").pack()
+
+    # Table headers
+    tk.Label(stats_frame, text="Emotion", font=("Arial Rounded MT Bold", 20, "underline"), bg="#FFFDDD", fg="hot pink", width=15, anchor="w").grid(row=0, column=0, padx=10, pady=5, sticky="w")
+    tk.Label(stats_frame, text="Count", font=("Arial Rounded MT Bold", 20, "underline"), bg="#FFFDDD", fg="hot pink", width=10, anchor="w").grid(row=0, column=1, padx=10, pady=5, sticky="w")
+
+    # Table rows
+    for i, (emo, count) in enumerate(counts.items(), start=1):
+        tk.Label(stats_frame, text=emo, font=("Arial Rounded MT Bold", 18), bg="#FFFDDD", fg="black", width=15, anchor="w", relief="solid", bd=1).grid(row=i, column=0, padx=10, pady=2, sticky="w")
+        tk.Label(stats_frame, text=str(count), font=("Arial Rounded MT Bold", 18), bg="#FFFDDD", fg="black", width=10, anchor="w", relief="solid", bd=1).grid(row=i, column=1, padx=10, pady=2, sticky="w")
 
 def open_fifth_page():
     main_menu_label.place_forget()
