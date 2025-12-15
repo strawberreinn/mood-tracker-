@@ -3,8 +3,8 @@ from tkinter import *
 from tkinter import messagebox
 import random  # for random greetings
 
+# ===== root window =====
 root = tk.Tk()
-
 root.title("moodifyy: your personal mood tracker")
 root.configure(bg="#FFFDDD")
 root.minsize(400, 400)
@@ -12,14 +12,14 @@ root.minsize(400, 400)
 icon = tk.PhotoImage(file="mylogo.png")
 root.iconphoto(True, icon)
 
-# ===== HOMEPAGE =====
+# ===== homepage images and labels =====
 top_image = tk.PhotoImage(file="mylogo.png")
-small_image = top_image.subsample(2, 2)
+small_image = top_image.subsample(2, 2)  # resize the image
 image_label = tk.Label(root, image=small_image, bg="#FFFDDD")
 image_label.pack(pady=0)
 
 label = tk.Label(
-    root, 
+    root,
     text="✿ moodifyy ✿",
     font=("Arial Rounded MT Bold", 85),
     justify="center",
@@ -29,7 +29,7 @@ label = tk.Label(
 label.pack(pady=0)
 
 caption = tk.Label(
-    root, 
+    root,
     text="your personal mood tracker",
     font=("Kristen ITC", 20),
     justify="center",
@@ -41,7 +41,7 @@ caption.pack(pady=5)
 input_frame = tk.Frame(root, bg="#FFFDDD")
 input_frame.pack(pady=18)
 
-# ===== INPUT NAME =====
+# ===== input name =====
 name_label = tk.Label(
     input_frame,
     text="Enter your name here",
@@ -52,7 +52,7 @@ name_label = tk.Label(
 name_label.pack(pady=7)
 
 name_entry = tk.Entry(
-    input_frame, 
+    input_frame,
     font=("Kristen ITC", 12),
     width=40,
     fg="hot pink",
@@ -63,7 +63,7 @@ name_entry = tk.Entry(
 )
 name_entry.pack(pady=5)
 
-# ===== INPUT DATE =====
+# ===== input date =====
 date_label = tk.Label(
     input_frame,
     text="Enter the date today (mm-dd-yy)",
@@ -74,7 +74,7 @@ date_label = tk.Label(
 date_label.pack(pady=3)
 
 date_entry = tk.Entry(
-    input_frame, 
+    input_frame,
     font=("Kristen ITC", 12),
     width=40,
     fg="hot pink",
@@ -85,11 +85,13 @@ date_entry = tk.Entry(
 )
 date_entry.pack(pady=5)
 
-# ===== VALIDATION =====
+# ===== validation functions =====
 def validate_name(P):
+    # only letters allowed in name, empty string also allowed
     return P.isalpha() or P == ""
 
 def validate_date(P):
+    # only numbers and - allowed in date
     allowed = "0123456789-"
     return all(c in allowed for c in P) or P == ""
 
@@ -97,11 +99,13 @@ name_entry.config(validatecommand=(root.register(validate_name), "%P"))
 date_entry.config(validatecommand=(root.register(validate_date), "%P"))
 
 def move_to_date(event):
+    # when enter pressed on name entry, move focus to date
     date_entry.focus()
 
 name_entry.bind("<Return>", move_to_date)
 
 def check_date_format(date_text):
+    # check if date is exactly mm-dd-yy format
     if len(date_text) != 8:
         return False
     if date_text[2] != '-' or date_text[5] != '-':
@@ -115,7 +119,7 @@ def check_date_format(date_text):
         return False
     return True
 
-# ===== GREETINGS LABELS =====
+# ===== greetings labels =====
 greeting_label = tk.Label(
     root,
     font=("Arial Rounded MT Bold", 40),
@@ -130,7 +134,7 @@ random_greeting_label = tk.Label(
     fg="hot pink"
 )
 
-# ===== MAIN MENU LABEL =====
+# ===== main menu label =====
 main_menu_label = tk.Label(
     root,
     text="✿ MAIN MENU ✿",
@@ -139,7 +143,7 @@ main_menu_label = tk.Label(
     fg="hot pink"
 )
 
-# ===== SECOND PAGE MENU =====
+# ===== second page menu =====
 second_menu_frame = tk.Frame(root, bg="#FFFDDD")
 
 button1 = tk.Button(
@@ -180,25 +184,28 @@ button3 = tk.Button(
 )
 button3.pack(pady=20)
 
-# ===== RETURN TO HOMEPAGE =====
+# ===== return home =====
 def return_home():
-    # Hide second page elements
+    # hide all pages
     greeting_label.place_forget()
     random_greeting_label.place_forget()
     main_menu_label.place_forget()
     second_menu_frame.place_forget()
-    # Also hide third page if visible
     how_are_you_label.place_forget()
     emoji_frame.place_forget()
     menu_button.place_forget()
     done_button.place_forget()
+    edit_entries_label.place_forget()
+    view_stats_label.place_forget()
+    edit_entries_frame.place_forget()
+    stats_frame.place_forget()
     blank_page_label.place_forget()
 
-    # Reset entries
+    # clear inputs
     name_entry.delete(0, END)
     date_entry.delete(0, END)
 
-    # Show homepage elements
+    # show homepage again
     image_label.pack(pady=0)
     label.pack(pady=0)
     caption.pack(pady=5)
@@ -219,7 +226,7 @@ button4 = tk.Button(
 )
 button4.pack(pady=20)
 
-# ===== RANDOM GREETINGS LIST =====
+# ===== random greetings list =====
 greetings_list = [
     "✿ hope u have a great day!!",
     "✿ keep smiling :)",
@@ -231,105 +238,244 @@ greetings_list = [
     "✿ how's your day??"
 ]
 
-# ===== THIRD PAGE ELEMENTS =====
+# ===== third page (how are you) =====
 how_are_you_label = tk.Label(
     root,
-    text="HOW ARE YOU?",
-    font=("Arial Rounded MT Bold", 50),
+    text="✿ HOW ARE YOU? ✿",
+    font=("Arial Rounded MT Bold", 55),
     bg="#FFFDDD",
     fg="hot pink"
 )
 
 emoji_frame = tk.Frame(root, bg="#FFFDDD")
 
-# Emoji buttons
-emoji_buttons = []
-emotions = ["😢", "😊", "😡", "😐", "😰"]
-for emo in emotions:
-    btn = tk.Button(emoji_frame, text=emo, font=("Arial Rounded MT Bold", 40), width=3, height=1)
-    btn.pack(side=LEFT, padx=15)
-    emoji_buttons.append(btn)
+emotions = ["😊", "😢", "😡", "😐", "😰"]
+emotion_names = ["HAPPY", "SAD", "ANGRY", "NEUTRAL", "STRESSED"]
 
-menu_button = tk.Button(root, text="MENU", font=("Arial Rounded MT Bold", 20), bg="#F7C767", width=10)
-done_button = tk.Button(root, text="DONE", font=("Arial Rounded MT Bold", 20), bg="#F7C767", width=10)
+# ===== store moods =====
+mood_entries = []  # global list to store moods
 
-# ===== BLANK FOURTH PAGE =====
-blank_page_label = tk.Label(root, text="", bg="#FFFDDD")  # Placeholder for done button
+# ===== emoji buttons with functionality =====
+def emoji_clicked(emoji, name):
+    # check if date entered
+    date_val = date_entry.get().strip()
+    if not date_val:
+        messagebox.showwarning("No date", "Please enter date first!")
+        return
+    # store mood in list as dictionary
+    mood_entries.append({"date": date_val, "emotion": emoji, "emotion_name": name})
+    messagebox.showinfo("Saved", f"{name} mood saved!")
+    open_fourth_page()  # go to edit entries page
 
-# ===== START BUTTON LOGIC =====
+for emo, name in zip(emotions, emotion_names):
+    container = tk.Frame(emoji_frame, bg="#FFFDDD")
+    container.pack(side=LEFT, padx=15, pady=20)
+
+    btn = tk.Button(
+        container,
+        text=emo,
+        font=("Arial Rounded MT Bold", 40),
+        width=6,
+        height=3,
+        bg="#F7C767",
+        fg="black",
+        activeforeground="#F7C767",
+        relief="groove",
+        command=lambda e=emo, n=name: emoji_clicked(e, n)  # bind emoji click
+    )
+    btn.pack()
+
+    lbl = tk.Label(
+        container,
+        text=name,
+        font=("Arial Rounded MT Bold", 20),
+        bg="#FFFDDD",
+        fg="hot pink"
+    )
+    lbl.pack()
+
+# ===== menu and done buttons =====
+menu_button = tk.Button(root, text="MENU", font=("Arial Rounded MT Bold", 20), bg="#F7C767", width=10, activeforeground="#F7C767", relief="groove", fg="black")
+done_button = tk.Button(root, text="DONE", font=("Arial Rounded MT Bold", 20), bg="#F7C767", width=10, activeforeground="#F7C767", relief="groove", fg="black")
+
+# ===== fourth page (edit entries) =====
+edit_entries_label = tk.Label(
+    root,
+    text="✿ EDIT ENTRIES ✿",
+    font=("Arial Rounded MT Bold", 55),
+    bg="#FFFDDD",
+    fg="hot pink"
+)
+
+edit_entries_frame = tk.Frame(root, bg="#FFFDDD")
+
+def refresh_edit_entries():
+    # clear all existing entry widgets
+    for widget in edit_entries_frame.winfo_children():
+        widget.destroy()
+
+    for i, entry in enumerate(mood_entries):
+        # create frame for each mood entry
+        frame = tk.Frame(edit_entries_frame, bg="#FFFDDD", relief="groove", bd=2)
+        frame.pack(pady=5, padx=10, fill="x")
+
+        # display date and mood
+        tk.Label(frame, text=f"Date: {entry['date']}", font=("Arial Rounded MT Bold", 14), bg="#FFFDDD", fg="hot pink").pack(anchor="w", padx=5)
+        tk.Label(frame, text=f"{entry['emotion']}  {entry['emotion_name']}", font=("Arial Rounded MT Bold", 18), bg="#FFFDDD", fg="black").pack(anchor="w", padx=5)
+
+        btn_frame = tk.Frame(frame, bg="#FFFDDD")
+        btn_frame.pack(anchor="e", padx=5, pady=2)
+
+        # ===== edit entry =====
+        def edit_entry(idx=i):
+            # confirm edit
+            confirm = messagebox.askyesno("Edit Entry", "Are you sure you want to edit this entry?")
+            if confirm:
+                del mood_entries[idx]  # simple approach: delete and go back to add entry page
+                open_third_page()
+
+        # ===== delete entry =====
+        def delete_entry(idx=i):
+            # confirm delete
+            confirm = messagebox.askyesno("Delete Entry", "Are you sure you want to delete this entry?")
+            if confirm:
+                del mood_entries[idx]
+                refresh_edit_entries()  # refresh page after delete
+
+        # buttons for edit/delete
+        tk.Button(btn_frame, text="Edit", command=edit_entry, relief="groove").pack(side=LEFT, padx=2)
+        tk.Button(btn_frame, text="Delete", command=delete_entry, relief="groove").pack(side=LEFT, padx=2)
+
+def open_fourth_page():
+    # hide other pages
+    main_menu_label.place_forget()
+    second_menu_frame.place_forget()
+    how_are_you_label.place_forget()
+    emoji_frame.place_forget()
+    view_stats_label.place_forget()
+
+    # show edit entries page
+    edit_entries_label.place(relx=0.5, y=160, anchor="n")
+    edit_entries_frame.place(relx=0.5, rely=0.35, anchor="n")
+    menu_button.place(relx=0.02, rely=0.95, anchor="sw")
+    done_button.place(relx=0.98, rely=0.95, anchor="se")
+    refresh_edit_entries()  # show current saved moods
+
+# ===== fifth page (view stats) =====
+view_stats_label = tk.Label(
+    root,
+    text="✿ VIEW STATS ✿",
+    font=("Arial Rounded MT Bold", 55),
+    bg="#FFFDDD",
+    fg="hot pink"
+)
+
+stats_frame = tk.Frame(root, bg="#FFFDDD")
+
+def refresh_stats():
+    # clear stats frame
+    for widget in stats_frame.winfo_children():
+        widget.destroy()
+    counts = {"HAPPY":0,"SAD":0,"ANGRY":0,"NEUTRAL":0,"STRESSED":0}
+    # count moods
+    for entry in mood_entries:
+        counts[entry["emotion_name"]] += 1
+    # display counts
+    for emo, count in counts.items():
+        tk.Label(stats_frame, text=f"{emo}: {count}", font=("Arial Rounded MT Bold", 20), bg="#FFFDDD", fg="hot pink").pack()
+
+def open_fifth_page():
+    # hide other pages
+    main_menu_label.place_forget()
+    second_menu_frame.place_forget()
+    how_are_you_label.place_forget()
+    emoji_frame.place_forget()
+    edit_entries_label.place_forget()
+    edit_entries_frame.place_forget()
+
+    # show stats page
+    view_stats_label.place(relx=0.5, y=160, anchor="n")
+    stats_frame.place(relx=0.5, rely=0.35, anchor="n")
+    menu_button.place(relx=0.02, rely=0.95, anchor="sw")
+    done_button.place_forget()
+    refresh_stats()  # show updated stats
+
+# ===== third page functions =====
+def open_third_page():
+    # hide other pages
+    main_menu_label.place_forget()
+    second_menu_frame.place_forget()
+    edit_entries_label.place_forget()
+    edit_entries_frame.place_forget()
+    view_stats_label.place_forget()
+    stats_frame.place_forget()
+
+    # show add entry page
+    how_are_you_label.place(relx=0.5, y=160, anchor="n")
+    emoji_frame.place(relx=0.5, y=300, anchor="n")
+    menu_button.place(relx=0.02, rely=0.95, anchor="sw")
+    done_button.place(relx=0.98, rely=0.95, anchor="se")
+
+# ===== main menu navigation =====
+def back_to_main_menu():
+    # hide all pages
+    how_are_you_label.place_forget()
+    emoji_frame.place_forget()
+    edit_entries_label.place_forget()
+    edit_entries_frame.place_forget()
+    view_stats_label.place_forget()
+    stats_frame.place_forget()
+    menu_button.place_forget()
+    done_button.place_forget()
+
+    # show main menu
+    main_menu_label.place(relx=0.5, y=150, anchor="n")
+    second_menu_frame.place(relx=0.5, rely=0.65, anchor="center")
+    greeting_label.place(x=10, y=10)
+    random_greeting_label.place(x=30, y=75)
+
+# ===== done button navigation =====
+def done_button_action():
+    # done button goes to next page depending on current page
+    if how_are_you_label.winfo_ismapped():       # from add entry
+        open_fourth_page()
+    elif edit_entries_label.winfo_ismapped():    # from edit entries
+        open_fifth_page()
+
+done_button.config(command=done_button_action)
+menu_button.config(command=back_to_main_menu)
+
+# ===== main menu buttons =====
+button1.config(command=open_third_page)
+button2.config(command=open_fourth_page)
+button3.config(command=open_fifth_page)
+
+# ===== start button =====
+button_frame = tk.Frame(root, bg="#FFFDDD")
+button_frame.pack(pady=13)
+
 def start_action():
     name = name_entry.get().strip()
     date = date_entry.get().strip()
-
     if not name or not date:
         messagebox.showwarning("Incomplete Data", "Please enter both name and date!")
     elif not check_date_format(date):
         messagebox.showwarning("Invalid Date", "Please enter the date in mm-dd-yy format!")
     else:
-        # Show greetings
+        # display greetings
         greeting_label.config(text=f"Hello, {name}!")
         greeting_label.place(x=10, y=10)
-
-        random_greeting = random.choice(greetings_list)
-        random_greeting_label.config(text=random_greeting, font=("Kristen ITC", 24))
+        random_greeting_label.config(text=random.choice(greetings_list), font=("Kristen ITC", 24))
         random_greeting_label.place(x=30, y=75)
-
-        # Show main menu
+        # show main menu
         main_menu_label.place(relx=0.5, y=150, anchor="n")
         second_menu_frame.place(relx=0.5, rely=0.65, anchor="center")
-
-        # Hide homepage
+        # hide homepage
         input_frame.pack_forget()
         button_frame.pack_forget()
         label.pack_forget()
         caption.pack_forget()
         image_label.pack_forget()
-
-# ===== THIRD PAGE FUNCTIONS =====
-def open_third_page():
-    # Hide main menu
-    main_menu_label.place_forget()
-    second_menu_frame.place_forget()
-
-    # Show third page
-    how_are_you_label.place(relx=0.5, y=150, anchor="n")
-    emoji_frame.place(relx=0.5, y=300, anchor="n")
-    menu_button.place(relx=0.02, rely=0.95, anchor="sw")
-    done_button.place(relx=0.98, rely=0.95, anchor="se")
-def back_to_main_menu():
-    # Hide third page
-    how_are_you_label.place_forget()
-    emoji_frame.place_forget()
-    menu_button.place_forget()
-    done_button.place_forget()
-    blank_page_label.place_forget()
-
-    # Show main menu
-    main_menu_label.place(relx=0.5, y=150, anchor="n")
-    second_menu_frame.place(relx=0.5, rely=0.65, anchor="center")
-
-    # Greetings stay
-    greeting_label.place(x=10, y=10)
-    random_greeting_label.place(x=30, y=75)
-
-def go_to_fourth_page():
-    # Hide third page
-    how_are_you_label.place_forget()
-    emoji_frame.place_forget()
-    menu_button.place_forget()
-    done_button.place_forget()
-
-    # Show blank fourth page
-    blank_page_label.place(relx=0.5, rely=0.5, anchor="center")
-
-# ===== BIND BUTTONS =====
-button1.config(command=open_third_page)
-menu_button.config(command=back_to_main_menu)
-done_button.config(command=go_to_fourth_page)
-
-# ===== START BUTTON =====
-button_frame = tk.Frame(root, bg="#FFFDDD")
-button_frame.pack(pady=13)
 
 start_button = tk.Button(
     button_frame,
@@ -342,5 +488,8 @@ start_button = tk.Button(
     command=start_action
 )
 start_button.pack(pady=16)
+
+# ===== blank page placeholder =====
+blank_page_label = tk.Label(root, text="", bg="#FFFDDD")
 
 root.mainloop()
